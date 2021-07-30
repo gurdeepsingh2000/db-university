@@ -4,7 +4,6 @@ SELECT * FROM `students` WHERE `date_of_birth` >= '1995-01-01' AND `date_of_birt
 2)Selezionare tutti i corsi che valgono più di 10 crediti
 SELECT * FROM `courses` WHERE `cfu` > 10;
 
-
 3)Selezionare tutti gli studenti che hanno più di 30 anni
 SELECT * FROM `students` WHERE `date_of_birth` < '1991-12-31';
 
@@ -38,9 +37,22 @@ SELECT `exam_student`.`exam_id`,AVG(`exam_student`.`vote`) FROM `exam_student` G
 SELECT `departments`.`name`, COUNT(*) FROM `degrees`INNER JOIN `departments` ON `degrees`.`department_id` = `departments`.`id` GROUP BY `departments`.`id`; 
 
 13)Selezionare tutti gli studenti iscritti al Corso di Laurea in Economia
-14)Selezionare tutti i Corsi di Laurea del Dipartimento di Neuroscienze
-15)Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
-16)Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e il relativo dipartimento, in ordine alfabetico per cognome e nome
-17)Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
-18)Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54)
+SELECT `students`.`name`,`degrees`.`name` FROM `students` INNER JOIN `degrees` ON `students`.`degree_id` = `degrees`.`id` WHERE `degrees`.`name` LIKE '%Economia'; 
 
+14)Selezionare tutti i Corsi di Laurea del Dipartimento di Neuroscienze
+SELECT * FROM `degrees` INNER JOIN departments ON `degrees`.`department_id` = `departments`.`id` WHERE `departments`.`name` LIKE '%Neuroscienze'; 
+
+
+15)Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
+SELECT `teachers`.`name`,`teachers`.`surname`, `courses`.`name` FROM `courses` INNER JOIN `course_teacher` ON `courses`.`id` = `course_teacher`.`course_id` INNER JOIN `teachers` ON `teachers`.`id` = `course_teacher`.`teacher_id` WHERE `teachers`.`id` = 44; 
+
+
+16)Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e il relativo dipartimento, in ordine alfabetico per cognome e nome
+SELECT `students`.`name`, `students`.`surname`, `degrees`.`name`, `departments`.`name` FROM `students` INNER JOIN `degrees` ON `degrees`.`id` = `students`.`degree_id` INNER JOIN `departments` ON `departments`.`id` = `degrees`.`department_id` ORDER BY `students`.`surname`, `students`.`name` ASC; 
+
+
+17)Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
+SELECT `teachers`.`name`,`teachers`.`surname`,`degrees`.`name`,`courses`.`name` FROM `degrees` INNER JOIN `courses` ON `degrees`.`id` = `courses`.`degree_id` INNER JOIN `course_teacher` ON `courses`.`id` = `course_teacher`.`course_id` INNER JOIN `teachers` ON `course_teacher`.`teacher_id` = `teachers`.`id` ORDER BY `degrees`.`name`; 
+
+18)Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54)
+SELECT `teachers`.`name`, `teachers`.`surname`,`departments`.`name` FROM `teachers` INNER JOIN `course_teacher` ON `course_teacher`.`teacher_id` = `teachers`.`id` INNER JOIN `courses` ON `course_teacher`.`course_id` = `courses`.`id` INNER JOIN `degrees` ON `courses`.`degree_id` = `degrees`.`id` INNER JOIN `departments` ON `degrees`.`department_id` = `departments`.`id` WHERE `departments`.`name` LIKE '%Matematica' ORDER BY `teachers`.`surname`; 
